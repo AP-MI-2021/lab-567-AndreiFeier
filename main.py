@@ -1,8 +1,12 @@
-from repository.repo import CRepo
-from service.c_service import CService
-from ui.console import Console
+from Logic.Crud import adaugaCheltuiala
+from Test.testAll import runAllTests
+from UI.console import runMenu
 
-repo=CRepo()
-service=CService(repo)
-ui=Console(service)
-ui.start()
+def main():
+    runAllTests()
+    lista = []
+    lista = adaugaCheltuiala("1", 2, 10, 10, "caldura", lista)
+    lista = adaugaCheltuiala("2", 3, 12, 30, "apa", lista)
+    runMenu(lista)
+
+main()
