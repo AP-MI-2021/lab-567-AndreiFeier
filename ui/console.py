@@ -1,58 +1,73 @@
-class Console:
-    def __init__(self,service):
-        '''
-        Initializeaza consola
-        :param service: CService
-        '''
-        self.__service=service
-    def __add(self):
-        n=input("nr apartament: ")
-        s=input("suma: ")
-        d=input("data: ")
-        t=input("tip: ")
-        self.__service.add(n,s,d,t)
-    def __update(self):
-        n = input("nr apartament: ")
-        s = input("suma: ")
-        d = input("data: ")
-        t = input("tip: ")
-        suma=input("noua suma: ")
-        data=input("noua data: ")
-        tip=input("noul tip: ")
-        self.__service.update(n,s,d,t,suma,data,tip)
-    def __delete(self):
-        n = input("nr apartament: ")
-        s = input("suma: ")
-        d = input("data: ")
-        t = input("tip: ")
-        self.__service.delete(n,s,d,t)
-    def __delete_ap(self):
-        n = input("nr apartament: ")
-        self.__service.delete_ap(n)
-    def __print(self):
-        print (self.__service.get_repo())
-    def __print_menu(self):
-        print ("1.Adauga o cheltuiala")
-        print ("2.Actualizeaza o cheltuiala")
-        print("3.Sterge o cheltuiala")
-        print("4.Sterge toate cheltuielile de la un apartament")
-        print("P.Afiseaza toate cheltuielile")
-        print("E.Exit")
-    def start(self):
-        while True:
-            self.__print_menu()
-            cmd=input("Comanda dvs este: ")
-            if cmd == "1":
-                self.__add()
-            elif cmd == "2":
-                self.__update()
-            elif cmd == "3":
-                self.__delete()
-            elif cmd == "4":
-                self.__delete_ap()
-            elif cmd == "p" or cmd == "P":
-                self.__print()
-            elif cmd == "e" or cmd =="E":
-                return
-            else:
-                print("Comanda invalida")
+from Logic.functionalitate import ordonareDupaSuma ,sumaPerApartament
+from Domain.cheltuiala import toString
+from Logic.Crud import adaugaCheltuiala, stergeCheltuiala, modificaCheltuiala
+
+
+
+def printMenu():
+    print("1. Adaugare cheltuiala")
+    print("2. Stergere cheltuiala")
+    print("3. Modificare cheltuiala")
+    print("6. Ordonarea cheltuielilor descrescător după sumă.")
+    print("7. Afișarea sumelor lunare pentru fiecare apartament.")
+    print("a. Afisare cheltuieli")
+    print("x. Iesire")
+
+
+def uiAdaugaCheltuiala(lista):
+    id = input("Dati id-ul: ")
+    nr_apartament = int(input("Dati nr_apartamentului: "))
+    suma = float(input('Dati suma: '))
+    data =int(input("Dati data: "))
+    tip = input("Dati tipul: ")
+    return adaugaCheltuiala(id, nr_apartament, suma, data, tip, lista)
+
+
+def uiStergeCheltuiala(lista):
+    id = input("Dati id-ul cheltuielii de sters: ")
+    return stergeCheltuiala(id, lista)
+
+
+def uiModificaCheltuiala(lista):
+    id = input("Dati id-ul cheltuielii de modificat: ")
+    nr_apartament = int(input("Dati noul nr de apartament: "))
+    suma = float(input("Dati noua suma: "))
+    data = int(input("Dati data:"))
+    tip = input("Dati noul tip: ")
+    return modificaCheltuiala(id, nr_apartament, suma, data, tip, lista)
+
+
+def showAll(lista):
+    for cheltuiala in lista:
+        print(toString(cheltuiala))
+
+def uiOrdonareDupaSuma(lista):
+    showAll(ordonareDupaSuma(lista))
+
+
+def uiSumaPerApartament(lista):
+    rezultat = sumaPerApartament(lista)
+    for nr_apartament in rezultat:
+        print("Apartamentul {} are suma preturilor {}".format(nr_apartament, rezultat[nr_apartament]))
+
+def runMenu(lista):
+    while True:
+        printMenu()
+        optiune = input("Dati optiunea: ")
+
+        if optiune == "1":
+            lista = uiAdaugaCheltuiala(lista)
+        elif optiune == "2":
+            lista = uiStergeCheltuiala(lista)
+        elif optiune == "3":
+            lista = uiModificaCheltuiala(lista)
+        elif optiune == "6":
+            uiOrdonareDupaSuma(lista)
+        elif optiune == "7":
+            uiSumaPerApartament(lista)
+        elif optiune == "a":
+            showAll(lista)
+        elif optiune == "x":
+            break
+        else:
+            print("Optiune gresita! Reincercati: ")
