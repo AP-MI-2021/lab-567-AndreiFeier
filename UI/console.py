@@ -10,6 +10,7 @@ def printMenu():
     print("3. Modificare cheltuiala")
     print("6. Ordonarea cheltuielilor descrescător după sumă.")
     print("7. Afișarea sumelor lunare pentru fiecare apartament.")
+    print("u. Undo")
     print("a. Afisare cheltuieli")
     print("x. Iesire")
 
@@ -51,20 +52,36 @@ def uiSumaPerApartament(lista):
         print("Apartamentul {} are suma preturilor {}".format(nr_apartament, rezultat[nr_apartament]))
 
 def runMenu(lista):
+    undo_lista=[]
+    lista=[]
     while True:
         printMenu()
         optiune = input("Dati optiunea: ")
 
         if optiune == "1":
             lista = uiAdaugaCheltuiala(lista)
+            undo_lista.append([el for el in lista])
         elif optiune == "2":
             lista = uiStergeCheltuiala(lista)
+            undo_lista.append([el for el in lista])
         elif optiune == "3":
             lista = uiModificaCheltuiala(lista)
+            undo_lista.append([el for el in lista])
         elif optiune == "6":
             uiOrdonareDupaSuma(lista)
         elif optiune == "7":
             uiSumaPerApartament(lista)
+        elif optiune == "u":
+            if len(undo_lista)>0:
+                new_lista=[]
+                for i,el in enumerate(undo_lista):
+                    if i!=len(undo_lista)-1:
+                        new_lista.append(el)
+                undo_lista=new_lista
+                if len(undo_lista)>0:
+                    lista = undo_lista[-1]
+                else:
+                    lista=[]
         elif optiune == "a":
             showAll(lista)
         elif optiune == "x":
